@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Paddle Baddle </title>
+		<style type="text/css">
+			@font-face {
+			  font-family: "OpenSymbol";
+			  src: url("images/BlackOpsOne-Regular.ttf");
+			}
+			* {
+				font-family: "OpenSymbol";
+				margin: 0;
+				padding: 0;
+			}
+
+			#canvas, body, html {
+				width: 100%;
+				height: 100%;
+				background: black;
+				overflow: hidden;
+			}
+			.hidden { display: none; }
+			/* 
+			https://www.w3schools.com/howto/howto_css_loader.asp
+			 */
+			#loader {
+			  border: 16px solid dimgray;
+			  border-top: 16px solid crimson;
+			  border-radius: 50%;
+			  width: 120px;
+			  height: 120px;
+			  animation: spin 2s linear infinite;
+			  margin: 100px auto 0;
+			}
+
+			@keyframes spin {
+			  0% { transform: rotate(0deg); }
+			  100% { transform: rotate(360deg); }
+			}
+
+			.menuButton {
+				font-size: 24px;
+				background: rgba(255,255,255,0.2);
+				display: inline-block;
+				padding: 10px;
+				color: #f3f3f3;
+			}
+			.title {
+				font-size: 30px;
+				display: inline-block;
+				padding: 10px;
+				color: dimgrey;
+				text-shadow: 1px 1px 0 #f3f3f3;
+			}
+			.levelStartText {
+				font-size: 30px;
+				display: inline-block;
+				padding: 10px;
+				color: steelblue;
+				background: #f3f3f3;
+				text-shadow: 2px 2px 0 #3f3f3f;
+				box-shadow: 2px 2px 0 #3f3f3f;
+
+			}
+			.hpBar {
+				background: crimson;
+				color: white;
+				width: 200px;
+				font-size: 18px;
+				padding: 2px;
+				opacity: 0.6;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="loader"></div>
+
+
+
+		<canvas id="canvas" class="hidden"></canvas>
+
+
+		<!-- These audio files are made at https://www.leshylabs.com/apps/sfMaker/  -->
+		<audio id="jump1">
+		  <source src="sounds/jump1.wav" type="audio/wav">
+		</audio>
+		<audio id="explosion1">
+		  <source src="sounds/explosion1.wav" type="audio/wav">
+		</audio>
+		<audio id="explosion2">
+		  <source src="sounds/explosion2.wav" type="audio/wav">
+		</audio>
+		<audio id="zap1">
+		  <source src="sounds/zap1.wav" type="audio/wav">
+		</audio>
+		<audio id="zap2">
+		  <source src="sounds/zap2.wav" type="audio/wav">
+		</audio>
+
+
+		<!-- This song comes from tyops at https://freesound.org/people/tyops/sounds/423805/ -->
+
+		<audio id="song1" autoplay="autoplay">
+		  <source src="sounds/423805__tyops__arcade-theme-4.wav" type="audio/wav">
+		</audio>
+
+
+		<script src="js/core.js" type="text/javascript"></script>
+
+		<script src="js/load.js" type="text/javascript"></script>
+		<script src="js/index.js" type="text/javascript"></script>
+		<script src="js/bricks.js" type="text/javascript"></script>
+		<script src="js/balls.js" type="text/javascript"></script>
+
+		<script src="js/particleEmitter.js" type="text/javascript"></script>
+
+		<script src="js/mainMenu.js" type="text/javascript"></script>
+
+
+
+	</body>
+
+	<!-- 
+	Images all come from Scribe at https://opengameart.org/content/breakout-graphics-no-shadow
+	 -->
+
+	 <!-- code all comes from me -->
+</html>
