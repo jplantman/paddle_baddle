@@ -318,7 +318,7 @@ if ( levels[currentLevel] ){
 
 	// show start text
 	var startText = createElem(
-		document.body.clientWidth/2 - 80, 
+		document.body.clientWidth/2, 
 		50, 
 		'levelStartText', 
 		'Level '+currentLevel+"<br/>"+levels[currentLevel].name
@@ -331,7 +331,7 @@ if ( levels[currentLevel] ){
 
 	console.log('no next level');
 	var startText = createElem(
-		document.body.clientWidth/2 - 80, 
+		document.body.clientWidth/2, 
 		50, 
 		'levelStartText', 
 		"You Win!"

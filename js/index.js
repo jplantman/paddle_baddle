@@ -76,7 +76,7 @@ bricks = bricks[0];
 var bricks = bricks;
 var balls = initBalls( paddle, bricks );
 
-// canvas shake
+// Canvas Shake
 canvas.shake = function(times){
 	for (var i = times; i >= 0; i--) {
 		(function(i){
@@ -95,12 +95,53 @@ canvas.shake = function(times){
 	}
 }
 
+// Pause Button
+var pauseButton = createElem(
+	document.body.clientWidth, 0,
+	"pauseButton",
+	"||"
+);
+pauseButton.onclick = function(){
+	if ( isPaused ){
+		isPaused = false;
+		pauseButton.innerHTML = "||";
+		before = Date.now();
+		update();
+	} else {
+		isPaused = true;
+		pauseButton.innerHTML = "&#9658;";
+	}
+}
+
+// Sound Button
+var soundButton = createElem(
+	document.body.clientWidth, 60,
+	"soundButton",
+	"&#9835;&#9835;"
+);
+var updateVolume = function(){
+	if ( gameVolume == 0 || gameVolume > 1 ){
+		gameVolume = 0;
+		soundButton.innerHTML = '_';
+	}
+	else if ( gameVolume == 0.5 ){
+		soundButton.innerHTML = '&#9835;';
+	} else {
+		soundButton.innerHTML = '&#9835;&#9835;';
+	}
+	setVolume( gameVolume );
+}
+soundButton.onclick = function(){
+	gameVolume += 0.5;
+	updateVolume();
+}
+updateVolume();
 // Update Loop
 before = Date.now();
 var before;
 var update = function(){
 	var now = Date.now();
-	var dt = now - before;
+	var dt = Math.min(20, now - before);
 	before = now;
 
 	c.clearRect(0, 0, canvas.width, canvas.height);
@@ -133,6 +174,7 @@ update();
 canvas.endRound = function(){
 	console.log("Ending Round");
 	roundOver = true;
+	pauseButton.parentNode.removeChild( pauseButton );
 	hpDisplay.parentNode.removeChild( hpDisplay );
 	canvas.removeEventListener( 'mousemove', paddle.moveTo );
 	canvas.removeEventListener( 'click', paddle.releaseBall );
@@ -152,8 +194,6 @@ canvas.endRound = function(){
 Steps: 
 
 finish main menu, bg img and options menu
-
-html menus: pause btn and sound options
 
 coins, score reports at end of each level based on time to win, health, coins
 with high score saved

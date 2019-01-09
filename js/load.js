@@ -20,12 +20,17 @@ var sound = {
 	zap2: document.getElementById('zap2'),
 	song1: document.getElementById('song1')
 }
-sound.jump1.volume = 0.03;
-sound.explosion1.volume = 0.3;
-sound.explosion2.volume = 0.3;
-sound.zap1.volume = 0.7;
-sound.zap2.volume = 0.1;
-sound.song1.volume = 0.3;
+var gameVolume;
+var setVolume = function( volume ){
+	gameVolume = volume;
+	sound.jump1.volume = 0.03 * volume;
+	sound.explosion1.volume = 0.3 * volume;
+	sound.explosion2.volume = 0.3 * volume;
+	sound.zap1.volume = 0.7 * volume;
+	sound.zap2.volume = 0.1 * volume;
+	sound.song1.volume = 0.3 * volume;
+}
+setVolume( 1 );
 
 
 

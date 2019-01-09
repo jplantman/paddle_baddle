@@ -3,27 +3,27 @@ var initMainMenu = function(){
 	loader.parentNode.removeChild( loader );
 
 	var title = createElem( 
-		document.body.clientWidth/2 - 80, 
+		document.body.clientWidth/2, 
 		50, 
 		'title', 
-		'Bricks vs Paddle' 
+		'Paddle Baddle' 
 	);
 
 	var start = createElem( 
-		document.body.clientWidth/2 - 20, 
+		document.body.clientWidth/2, 
 		120, 
 		'menuButton', 
 		'Start'
 	);
-	
 
 	var startGame = function(){
 		canvas.classList.remove('hidden');
 		start.parentNode.removeChild( start );
 		title.parentNode.removeChild( title );
-		initRound(4);
+		initRound(1);
 		sound.song1.play();
 	}
+	
 	start.onclick = startGame;
 
 
