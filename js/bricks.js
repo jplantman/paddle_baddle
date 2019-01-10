@@ -24,9 +24,18 @@ var initBricks = function(currentLevel, paddle){
 		sandy1: {x: 320, y: 0, points: 3},
 		sandy2: {x: 360, y: 0, next: 'sandy1', points: 3},
 
-
-		// BOSSES
-		// boss1: {x: 200, y: 40, ai: "enemy", points: 30},
+	}
+	// BOSSES
+	// boss1: {x: 200, y: 40, ai: "enemy", points: 30},
+	for (var i = 50; i > 0; i--) {
+		data[ 'boss'+ [i] ] = {
+			x: 200,
+			y: 40,
+			ai: 'enemy',
+			points: 30,
+			next: ( i > 1 ? 'boss'+(i-1) : undefined ),
+			size: 80
+		}
 	}
 
 	var points = [];
@@ -113,8 +122,8 @@ var initBricks = function(currentLevel, paddle){
 		var brick = {
 			x: x,
 			y: y,
-			w: 32,
-			h: 32,
+			w: type.size || 32,
+			h: type.size || 32,
 			image: images['spritesheet'],
 			imgx: type.x,
 			imgy: type.y,
@@ -127,7 +136,7 @@ var initBricks = function(currentLevel, paddle){
 			remove: removeBrick,
 			ai: type.ai // enemy
 		}
-		if ( type.ai == "enemy" ){
+		if ( type.ai == "enemy" || type.ai == 'boss' ){
 			brick.dx = 30;
 			brick.update = function(dt){
 				brick.x -= brick.dx * dt / 1000;
@@ -137,11 +146,25 @@ var initBricks = function(currentLevel, paddle){
 					brick.dx *= -1;
 				}
 				if (Math.random() < 0.002 ){
-					createBrick( 
-						brick.x + brick.w/2,
-						brick.y + brick.h,
-						"idol1" );
-					sound.zap2.play();
+					if ( type.ai == 'enemy' ){
+						createBrick( 
+							brick.x + brick.w/2,
+							brick.y + brick.h,
+							"idol1" );
+						sound.zap2.play();	
+					} else if ( type.ai == 'boss' ){
+						createBrick( 
+							brick.x + brick.w/4,
+							brick.y + brick.h,
+							"idol1" );
+						sound.zap2.play();
+						createBrick( 
+							brick.x + brick.w*3/4,
+							brick.y + brick.h,
+							"idol1" );
+						sound.zap2.play();
+					}
+					
 				}
 			}
 		}
@@ -562,8 +585,7 @@ var initBricks = function(currentLevel, paddle){
 			createBrick(
 					10 + 40 * 1, 
 					20, 
-					"face4",
-					"double"
+					"boss20",
 				);
 			for (var i = 6; i >= 0; i--) {
 				if ( i == 2 || i == 4 || i == 6  ){

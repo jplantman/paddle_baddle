@@ -20,7 +20,7 @@ var initMainMenu = function(){
 		canvas.classList.remove('hidden');
 		start.parentNode.removeChild( start );
 		title.parentNode.removeChild( title );
-		initRound(9);
+		initRound(10);
 		sound.song1.play();
 	}
 	
