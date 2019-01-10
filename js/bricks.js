@@ -5,24 +5,59 @@ var initBricks = function(currentLevel, paddle){
 
 	var data = { // BRICK TYPES //
 
-		face1: {x: 200, y: 40, ai: "enemy"},
-		face2: {x: 240, y: 40, ai: "enemy", next: "face1"},
-		face3: {x: 280, y: 40, ai: "enemy", next: "face2"},
-		face4: {x: 320, y: 40, ai: "enemy", next: "face3"},
+		face1: {x: 200, y: 40, ai: "enemy", points: 30},
+		face2: {x: 240, y: 40, ai: "enemy", next: "face1", points: 30},
+		face3: {x: 280, y: 40, ai: "enemy", next: "face2", points: 30},
+		face4: {x: 320, y: 40, ai: "enemy", next: "face3", points: 30},
 		idol1: {x: 240, y: 120, ai: "bullet"},
 
-		red: {x: 0, y: 0},
-		purple: {x: 40, y: 0, next: 'red'},
-		yellow: {x: 80, y: 0, next: 'purple'},
-		blue1: {x: 120, y: 0, next: 'yellow'},
-		blue2: {x: 160, y: 0, next: 'blue1'},
-		green1: {x: 200, y: 0, next: 'blue2'},
-		green2: {x: 240, y: 0, next: 'green1'},
-		star1: {x: 280, y: 0, next: "green2"},
-		star2: {x: 280, y: 0, next: "star1"},
-		star3: {x: 280, y: 0, next: "star2"},
-		sandy1: {x: 320, y: 0},
-		sandy2: {x: 360, y: 0, next: 'sandy1'},
+		red: {x: 0, y: 0, points: 5},
+		purple: {x: 40, y: 0, next: 'red', points: 5},
+		yellow: {x: 80, y: 0, next: 'purple', points: 5},
+		blue1: {x: 120, y: 0, next: 'yellow', points: 5},
+		blue2: {x: 160, y: 0, next: 'blue1', points: 5},
+		green1: {x: 200, y: 0, next: 'blue2', points: 5},
+		green2: {x: 240, y: 0, next: 'green1', points: 5},
+		star1: {x: 280, y: 0, next: "green2", points: 10},
+		star2: {x: 280, y: 0, next: "star1", points: 10},
+		star3: {x: 280, y: 0, next: "star2", points: 10},
+		sandy1: {x: 320, y: 0, points: 3},
+		sandy2: {x: 360, y: 0, next: 'sandy1', points: 3},
+
+
+		// BOSSES
+		// boss1: {x: 200, y: 40, ai: "enemy", points: 30},
+	}
+
+	var points = [];
+	var updatePoints = function(dt){
+		this.y += this.dy * dt / 1000;
+		this.style.top = this.y + 'px';
+		this.time += dt;
+		if ( this.time > 800 ){
+			this.parentNode.removeChild( this );
+			for (var i = points.length - 1; i >= 0; i--) {
+				if ( points[i] == this ){
+					points.splice(i, 1);
+					return;
+				}
+			}
+		}
+	}
+	var indicatePoints = function( n, xcanv, ycanv ){
+		// account for canvas stretch
+		var stretchX = canvas.offsetWidth / canvas.width;
+		var stretchY = canvas.offsetHeight / canvas.height;
+		var x = ( xcanv - canvas.offsetLeft ) * stretchX;
+		var y = ( ycanv - canvas.offsetTop ) * stretchY;
+
+		var elem = createElem( x, y, "points", n );
+		elem.update = updatePoints;
+		elem.dy = -30;
+		elem.time = 0;
+		elem.y = y;
+		points.push( elem );
+		console.log(elem.style.top)
 	}
 
 	var removeBrick = function(){
@@ -36,6 +71,9 @@ var initBricks = function(currentLevel, paddle){
 					this.imgx, this.imgy
 				);
 				canvas.shake(12);
+				paddle.score += this.points;
+				paddle.scoreDisplay.innerHTML = paddle.score;
+				indicatePoints( this.points, this.x + this.w/2, this.y - 20 );
 				if ( this.next ){
 					createBrick( this.x, this.y, this.next );
 					return;
@@ -82,6 +120,7 @@ var initBricks = function(currentLevel, paddle){
 			imgy: type.y,
 			imgw: 32,
 			imgh: 32,
+			points: type.points,
 			upgrade: upgrade,
 			next: type.next,
 			draw: drawImage,
@@ -160,8 +199,6 @@ var initBricks = function(currentLevel, paddle){
 					"face1",
 					"double"
 				);
-
-
 			for (var i = 5; i >= 1; i--) {
 				
 				// Middle Row
@@ -175,8 +212,6 @@ var initBricks = function(currentLevel, paddle){
 					20 + 40 *2 , 
 					"red" );
 			}
-
-			
 		}
 	},
 	{
@@ -197,7 +232,6 @@ var initBricks = function(currentLevel, paddle){
 					20, 
 					"face1",
 				);
-			
 			for (var i = 6; i >= 0; i--) {
 				createBrick(
 					10 + 40 * i, 
@@ -221,9 +255,7 @@ var initBricks = function(currentLevel, paddle){
 					20 + 40 * 5, 
 					"sandy2" );
 				}
-			}
-
-			
+			}	
 		}
 	},
 	{
@@ -260,9 +292,7 @@ var initBricks = function(currentLevel, paddle){
 					20 + 40 * 4, 
 					"red" );
 				}
-			}
-
-			
+			}	
 		}
 	},
 	{
@@ -298,9 +328,251 @@ var initBricks = function(currentLevel, paddle){
 					20 + 40 * 4, 
 					"red" );
 				}
-			}
+			}	
+		}
+	},
+	{
+		level: 5,
+		name: "Useless Fighting",
+		load: function(){
+			console.log("Level: "+this.name);
 
-			
+			createBrick(
+					10 + 40 * 3, 
+					20, 
+					"face4",
+					"double"
+				);
+
+			createBrick(
+					10 + 40 * 6, 
+					20, 
+					"face4",
+				);
+			for (var i = 6; i >= 0; i--) {
+				if ( i > 1 && i < 4  ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 2, 
+					"star1" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 3, 
+					"yellow" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 9, 
+					"blue2" );
+				}
+			}	
+		}
+	},
+	{
+		level: 6,
+		name: "Sticky",
+		load: function(){
+			console.log("Level: "+this.name);
+
+			createBrick(
+					10 + 40 * 3, 
+					20, 
+					"face2",
+					"double"
+				);
+
+			createBrick(
+					10 + 40 * 3, 
+					20, 
+					"face2",
+					"sticky"
+				);
+
+			createBrick(
+					10 + 40 * 6, 
+					20, 
+					"face2",
+					"double"
+				);
+			for (var i = 6; i >= 0; i--) {
+				if ( i > 1 && i < 6  ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 2, 
+					"star1", "sticky" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 3, 
+					"yellow", "double" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 4, 
+					"blue2" );
+				}
+			}	
+		}
+	},
+	{
+		level: 7,
+		name: "Collumns",
+		load: function(){
+			console.log("Level: "+this.name);
+
+			createBrick(
+					10 + 40 * 3, 
+					20, 
+					"face3",
+					"double"
+				);
+
+			createBrick(
+					10 + 40 * 3, 
+					20, 
+					"face4",
+					"sticky"
+				);
+
+			createBrick(
+					10 + 40 * 6, 
+					20, 
+					"face2",
+					"double"
+				);
+			for (var i = 6; i >= 0; i--) {
+				if ( i == 0 || i == 2 || i == 4 || i == 6  ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 2, 
+					"yellow" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 3, 
+					"sandy2" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 4, 
+					"sandy2" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 5, 
+					"sandy2" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 6, 
+					"sandy2" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 7, 
+					"sandy2" );
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 8, 
+					"yellow" );
+				}
+			}	
+		}
+	},
+	{
+		level: 8,
+		name: "Protected",
+		load: function(){
+			console.log("Level: "+this.name);
+
+			createBrick(
+					10 + 40 * 3, 
+					20, 
+					"face3",
+					"double"
+				);
+
+			createBrick(
+					10 + 40 * 3, 
+					20 + 40 * 2, 
+					"face3",
+					"sticky"
+				);
+
+			for (var i = 6; i >= 0; i--) {
+				createBrick(
+				10 + 40 * i, 
+				20 + 40 * 1, 
+				"green2" );
+				createBrick(
+				10 + 40 * i, 
+				20 + 40 * 3, 
+				"green2" );
+				if ( i == 2 || i == 4  ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 1, 
+					"blue2" );
+				}
+			}	
+		}
+	},
+	{
+		level: 9,
+		name: "Large Fight",
+		load: function(){
+			console.log("Level: "+this.name);
+
+			createBrick(
+					10 + 40 * 1, 
+					20, 
+					"face4",
+					"double"
+				);
+			createBrick(
+					10 + 40 * 3, 
+					20 + 40 * 1, 
+					"face2",
+				);
+			createBrick(
+					10 + 40 * 5, 
+					20, 
+					"face3",
+					"double"
+				);
+			createBrick(
+					10 + 40 * 6, 
+					20 + 40 * 1, 
+					"face2",
+				);
+			for (var i = 6; i >= 0; i--) {
+				if ( i == 2 || i == 4 || i == 6  ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 2, 
+					"star3" );
+				}
+				if ( i == 2 ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 3, 
+					"star3" );
+				}
+			}	
+		}
+	},
+	{
+		level: 10,
+		name: "First Boss (almost)",
+		load: function(){
+			console.log("Level: "+this.name);
+
+			createBrick(
+					10 + 40 * 1, 
+					20, 
+					"face4",
+					"double"
+				);
+			for (var i = 6; i >= 0; i--) {
+				if ( i == 2 || i == 4 || i == 6  ){
+					createBrick(
+					10 + 40 * i, 
+					20 + 40 * 2, 
+					"star3" );
+				}
+			}	
 		}
 	}
 ];
@@ -346,7 +618,8 @@ var checkForWin = function(){
 	if ( bricks.length == 0 ){
 		setTimeout(function(){
 			canvas.endRound();
-			initRound(currentLevel+1);
+			showScoreCard( currentLevel+1, paddle )
+			// initRound(currentLevel+1);
 		}, 2000)
 	}
 }
@@ -357,7 +630,7 @@ var checkForWin = function(){
 
 
 
-return [ bricks, bullets ];
+return [ bricks, bullets, points ];
 
 
 }

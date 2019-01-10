@@ -1,7 +1,6 @@
 
 var initRound = function(currentLevel){
 
-
 var roundOver = false;
 canvas.style = " background: url(images/breakout_bg.png) no-repeat center center fixed; " +
 			"-webkit-background-size: cover;" +
@@ -12,6 +11,8 @@ canvas.style = " background: url(images/breakout_bg.png) no-repeat center center
 // Paddle
 var paddle = {
 	hp: 10,
+	score: 0,
+	time: 0,
 	x: canvas.width/2 - 49,
 	y: canvas.height - 25,
 	w: 98,
@@ -38,18 +39,26 @@ var paddle = {
 paddle.checkDefeat = function(){
 	if ( paddle.hp <= 0 || balls.length == 0 ){
 		var startText = createElem(
-		document.body.clientWidth/2 - 80, 
-		50, 
-		'levelStartText', 
-		"Game Over!"
-	)
-	setTimeout( function(){
-		startText.parentNode.removeChild( startText );
-		canvas.endRound();
-		initRound( currentLevel );
-	}, 2000 );
+			document.body.clientWidth/2, 
+			50, 
+			'levelStartText', 
+			"Game Over!"
+		)
+		setTimeout( function(){
+			startText.parentNode.removeChild( startText );
+			canvas.endRound();
+			initRound( currentLevel );
+		}, 2000 );
 	}
 }
+
+// Score Display
+paddle.scoreDisplay = createElem(
+	10, 
+	document.body.clientHeight-10,
+	'scoreDisplay',
+	'0'
+);
 
 // Paddle Health
 var hpDisplay = createElem(
@@ -70,6 +79,7 @@ canvas.addEventListener( 'mousemove', paddle.moveTo );
 // Bricks
 var bricks = initBricks(currentLevel, paddle);
 var bullets = bricks[1];
+var points = bricks[2];
 bricks = bricks[0];
 
 
@@ -85,8 +95,8 @@ canvas.shake = function(times){
 					canvas.style.transform = "";
 				} else {
 					var num = times - i;
-					var x = rand( num );
-					var y = rand( num );
+					var x = rand( num ) - num/2;
+					var y = rand( num ) - num/2;
 					canvas.style.transform = 
 						"translate("+x+"px, "+y+"px)";
 				}
@@ -144,6 +154,8 @@ var update = function(){
 	var dt = Math.min(20, now - before);
 	before = now;
 
+	paddle.time += dt;
+
 	c.clearRect(0, 0, canvas.width, canvas.height);
 
 	for (var i = bricks.length - 1; i >= 0; i--) {
@@ -165,6 +177,10 @@ var update = function(){
 		particles[i].update(dt);
 	}
 
+	for (var i = points.length - 1; i >= 0; i--) {
+		points[i].update(dt);
+	}
+
 	if ( !isPaused && !roundOver ){
 		requestAnimationFrame( update );
 	}
@@ -174,7 +190,9 @@ update();
 canvas.endRound = function(){
 	console.log("Ending Round");
 	roundOver = true;
+	paddle.scoreDisplay.parentNode.removeChild( paddle.scoreDisplay );
 	pauseButton.parentNode.removeChild( pauseButton );
+	soundButton.parentNode.removeChild( soundButton );
 	hpDisplay.parentNode.removeChild( hpDisplay );
 	canvas.removeEventListener( 'mousemove', paddle.moveTo );
 	canvas.removeEventListener( 'click', paddle.releaseBall );
@@ -195,12 +213,13 @@ Steps:
 
 finish main menu, bg img and options menu
 
-coins, score reports at end of each level based on time to win, health, coins
-with high score saved
+pause menu to go back to start
+
+high score saved
 
 unbreakable bricks
 
-sticky and maybe other power ups or heals
+sticky and maybe other power ups or heals ??
 
 more levels
 
@@ -208,7 +227,9 @@ more backgrounds
 
 bosses
 
-exploding bricks that are dangerous and look like idols
+exploding bricks that are dangerous and look like idols ??
+
+html buttons responsive to screen size changes
 
 */
 	

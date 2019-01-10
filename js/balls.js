@@ -173,6 +173,13 @@ var updateBall = function(dt){
 			if (brickHit.upgrade == 'double'){
 				this.double();
 			}
+			else if (brickHit.upgrade == 'sticky'){
+				// Balls become sticky
+				console.log('sticky')
+				for (var i = balls.length - 1; i >= 0; i--) {
+					balls[i].isSticky = true;
+				}
+			}
 
 			brickHit.remove();
 			sound.explosion1.currentTime = 0;
